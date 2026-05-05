@@ -8,41 +8,29 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
-
   let body = req.body;
-  // Vercel parses JSON automatically when content-type is application/json
   if (typeof body === 'string') {
     try { body = JSON.parse(body); } catch (e) { body = {}; }
   }
   body = body || {};
-
   const name = (body.name || '').toString().trim().slice(0, 200);
   const company = (body.company || '').toString().trim().slice(0, 200);
   const size = (body.size || '').toString().trim().slice(0, 80);
   const msg = (body.msg || '').toString().trim().slice(0, 5000);
   const email = (body.email || '').toString().trim().slice(0, 200);
-
-  // Honeypot anti-spam
   if (body.website) {
     return res.status(200).json({ ok: true, sent: false });
   }
   if (!name && !company && !msg) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
-
   const apiKey = process.env.RESEND_API_KEY;
   const toEmail = process.env.CONTACT_TO_EMAIL || 'hello@venari.se';
-  const fromEmail = process.env.CONTACT_FROM_EMAIL || 'Vitalis <onboarding@resend.dev>';
-
+  const fromEmail = process.env.CONTACT_FROM_EMAIL || 'Vitality Partners <onboarding@resend.dev>';
   if (!apiKey) {
-    console.warn('[contact] RESEND_API_KEY missing — submission accepted but not delivered');
-    return res.status(200).json({
-      ok: true,
-      sent: false,
-      note: 'Email service not configured. Submission logged.'
-    });
+    console.warn('[contact] RESEND_API_KEY missing');
+    return res.status(200).json({ ok: true, sent: false, note: 'Email service not configured.' });
   }
-
   const subject = `New enquiry — ${company || name || 'unknown'}`;
   const text = [
     `Name: ${name || '(not given)'}`,
@@ -53,28 +41,18 @@ export default async function handler(req, res) {
     'Message:',
     msg || '(no message)',
     '',
-    '— Sent from vitalis.se contact form',
+    '— Sent from Vitality Partners contact form',
   ].join('\n');
-
   try {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: [toEmail],
-        reply_to: email || undefined,
-        subject,
-        text,
-      }),
+      headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from: fromEmail, to: [toEmail], reply_to: email || undefined, subject, text }),
     });
     if (!r.ok) {
       const errText = await r.text();
       console.error('[contact] Resend error:', r.status, errText);
-      return res.status(502).json({ error: 'Email service error', details: errText });
+      return res.status(502).json({ error: 'Email service error' });
     }
     return res.status(200).json({ ok: true, sent: true });
   } catch (err) {
