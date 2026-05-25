@@ -1,0 +1,23 @@
+# Vitality
+
+> Vitality is a remote coach-matching service. After a short discovery call and a
+> human triage, each person is matched to the right coach from a vetted pool. The
+> coach builds a personalised nutrition plan and workout plan, then runs weekly
+> check-ins. Everything is fully remote. Vitality operates across the Nordics and
+> the EU and is a project by Arenzo.
+
+## Key facts
+- Service: remote coach-matching; nutrition plans, workout plans, weekly check-ins
+- Delivery: fully remote (no in-person sessions)
+- Coverage: Nordics and the European Union
+- Audience: individuals, and companies arranging team performance programs
+- Operator: Arenzo (Vitality is a project/brand, not a separately registered company)
+- Contact: David@vitality.training
+
+## Pages
+- [Home](https://vitality.training/): What Vitality is and how matching works
+- [The Program](https://vitality.training/TheProgram): How the program works, from intake to first plan
+- [For Companies](https://vitality.training/ForCompanies): Team performance programs for companies
+- [About](https://vitality.training/About): About Vitality and Arenzo
+- [Privacy Policy](https://vitality.training/privacy)
+- [Terms of Use](https://vitality.training/terms)
