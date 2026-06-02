@@ -262,10 +262,15 @@ form.addEventListener('submit',async function(e){
     if(data[k]!==undefined){ data[k]=[].concat(data[k],v); } else { data[k]=v; }
   });
   btn.disabled=true; var orig=btn.innerHTML; btn.innerHTML='Sending...';
+  // Web3Forms delivers each submission to the inbox associated with the access key.
+  data.access_key='367c2abd-f809-4b72-a64d-a5b153240159';
+  data.subject='New coach application, '+(data.name||'unnamed applicant');
+  data.from_name='Vitality coach application';
+  if(data.email){ data.replyto=data.email; }
   try{
-    var res=await fetch('/api/coach-application',{
+    var res=await fetch('https://api.web3forms.com/submit',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify(data)
     });
     if(!res.ok) throw new Error('bad status '+res.status);
